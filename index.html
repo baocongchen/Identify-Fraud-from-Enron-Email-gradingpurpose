@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Identify-fraud-from-enron-email-gradingpurpose by baocongchen</title>
+    <title>Identify fraud from enron email by Buu Thong Tran</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
@@ -15,51 +15,174 @@
   </head>
   <body>
     <div class="wrapper">
-      <header>
-        <h1 class="header">Identify-fraud-from-enron-email-gradingpurpose</h1>
-        <p class="header"></p>
-
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/baocongchen/Identify-Fraud-from-Enron-Email-gradingpurpose/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/baocongchen/Identify-Fraud-from-Enron-Email-gradingpurpose/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/baocongchen/Identify-Fraud-from-Enron-Email-gradingpurpose">View On GitHub</a></li>
-        </ul>
-
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/baocongchen">baocongchen</a></p>
-
-
-      </header>
       <section>
-        <h3>
-<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>Udacity Data Analyst Nanodegree</h1>
+        <h2>Project 5: Identify Fraud from Enron Email</h2>
+        <p class="author">-by <a href="https://www.linkedin.com/in/buuthongtran" class="author">Tran Buu Thong</a>-</p>
+        <h3><a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Overview</h3>
+        <p>In 2000, Enron was one of the largest companies in the United States. By 2002, it had collapsed into bankruptcy due to widespread corporate fraud. In the resulting Federal investigation, a significant amount of typically confidential information entered into the public record, including tens of thousands of emails and detailed financial data for top executives. In this project, I will build a person of interest identifier based on financial and email data made public as a result of the Enron scandal.</p>
+        <h3><a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Questions</h3>
+        <p><strong>Question 1: Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it. As part of your answer, give some background on the dataset and how it can be used to answer the project question. Were there any outliers in the data when you got it, and how did you handle those?  [relevant rubric items: “data exploration”, “outlier investigation”].</strong></p>
+        <p>The goal of this project is to leverage enron data to build a predictive model that can effectively classify individuals into POI (person of interest) and non-POI. Here is the summary of the data</p>
+        <ul>
+          <li>Total number of data points: 146</li>
+          <li>Total number of poi: 18</li>
+          <li>Total number of non-poi: 128</li>
+        </ul>
+        <p>There are 21 features for each person in the dataset, and 20 features are used</p>
+        <p>The number of missing values for each feature:</p>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here <a href="https://guides.github.com/features/mastering-markdown/">using GitHub Flavored Markdown</a>, select a template crafted by a designer, and publish. After your page is generated, you can check out the new <code>gh-pages</code> branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.</p>
+        <table style="width:100%">
+          <tr>
+            <th>Feature</th>
+            <th>NaN per feature</th>
+          </tr>
+          <tr>
+            <td>salary</td>
+            <td>51</td>
+          </tr>
+          <tr>
+            <td>to_messages</td>
+            <td>60</td>
+          </tr>
+          <tr>
+            <td>deferral_payments</td>
+            <td>107</td>
+          </tr>
+          <tr>
+            <td>total_payments</td>
+            <td>21</td>
+          </tr>
+          <tr>
+            <td>loan_advances</td>
+            <td>142</td>
+          </tr>
+          <tr>
+            <td>bonus</td>
+            <td>64</td>
+          </tr>
+          <tr>
+            <td>email_address</td>
+            <td>35</td>
+          </tr>
+          <tr>
+            <td>restricted_stock_deferred</td>
+            <td>128</td>
+          </tr>
+          <tr>
+            <td>total_stock_value</td>
+            <td>20</td>
+          </tr>
+          <tr>
+            <td>shared_receipt_with_poi</td>
+            <td>60</td>
+          </tr>
+          <tr>
+            <td>long_term_incentive</td>
+            <td>80</td>
+          </tr>
+          <tr>
+            <td>exercised_stock_options</td>
+            <td>44</td>
+          </tr>
+          <tr>
+            <td>from_messages</td>
+            <td>60</td>
+          </tr>
+          <tr>
+            <td>other</td>
+            <td>53</td>
+          </tr>
+          <tr>
+            <td>from_poi_to_this_person</td>
+            <td>60</td>
+          </tr>
+          <tr>
+            <td>from_this_person_to_poi</td>
+            <td>60</td>
+          </tr>
+          <tr>
+            <td>poi</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>deferred_income</td>
+            <td>97</td>
+          </tr>
+          <tr>
+            <td>expenses</td>
+            <td>51</td>
+          </tr>
+          <tr>
+            <td>restricted_stock</td>
+            <td>36</td>
+          </tr>
+          <tr>
+            <td>director_fees</td>
+            <td>129</td>
+          </tr>
+        </table>
+        <p>Looking at the scatter plot, we can see that the enron dataset contains 1 outlier which is TOTAL, so we need to remove it to avoid its impact on our predictive models</p>
 
-<h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designer Templates</h3>
+        <p><strong>Question 2: What features did you end up using in your POI identifier, and what selection process did you use to pick them? Did you have to do any scaling? Why or why not? As part of the assignment, you should attempt to engineer your own feature that does not come ready-made in the dataset -- explain what feature you tried to make, and the rationale behind it. (You do not necessarily have to use it in the final analysis, only engineer and test it.) In your feature selection step, if you used an algorithm like a decision tree, please also give the feature importances of the features that you use, and if you used an automated feature selection function like SelectKBest, please report the feature scores and reasons for your choice of parameter values.  [relevant rubric items: “create new features”, “properly scale features”, “intelligently select feature”]</strong></p>
+        <p>scikit-learn's SelectKBest function returns 12 best features to build predictive models; here is the list of features and their scores:</p>
+        <br>
+        <pre> [('expenses', 25.097541528735491), ('deferred_income', 24.467654047526398), ('loan_advances', 21.060001707536571), ('shared_receipt_with_poi', 18.575703268041785), ('director_fees', 16.641707070468989), ('restricted_stock_deferred', 11.595547659730601), ('other', 10.072454529369441), ('long_term_incentive', 9.3467007910514877), ('deferral_payments', 8.8667215371077717), ('from_this_person_to_poi', 8.7464855321290802), ('total_payments', 7.2427303965360181), ('total_stock_value', 6.2342011405067401), ('to_messages', 5.3449415231473374), ('exercised_stock_options', 4.204970858301416), ('msg_to_poi_ratio', 3.2107619169667441), ('from_messages', 2.4265081272428781), ('restricted_stock', 2.1076559432760908), ('poi', 1.6988243485808501), ('salary', 0.2170589303395084), ('from_poi_to_this_person', 0.16416449823428736), ('bonus', 0.06498431172371151)] </pre>
 
-<p>We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.</p>
+        <p>I made 2 new features named 'msg_from_poi_ratio' and 'msg_to_poi_ratio'; 'msg_from_poi_ratio' shows the ratio a person receives emails from POI, and 'msg_to_poi_ratio' shows the ratio a person sends emails to POI. I intuitively thought that POIs are more likely to contact each other than non-POIs; therefore the two new features I engineered would be better predictors of POI; however, the scores I got from SelectKBest function show me the opposite. After choosing 12 best features to build predictive models, I use min-max scalers to linearly rescale each feature to a common range.</p>
 
-<h3>
-<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating pages manually</h3>
+        <p><strong>Question 3: What algorithm did you end up using? What other one(s) did you try? How did model performance differ between algorithms?  [relevant rubric item: “pick an algorithm”]</strong></p>
+        <p>I tried 4 algorithm: naive bayes, k-mean, logistic regression and svm. Logistic regression gives me the best accuracy, precision performance; svm comes second, then naive bayes and kmeans. An ideal system with high precision and high recall will return many results, with all results labeled correctly, and this is the standard I apply for choosing the best algorithm. Based on the result, logistic regression comes out to be the best model to predict POI in this project.</p>
+        <table style="width:100%">
+          <tr>
+            <th>Feature</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+          </tr>
+          <tr>
+            <td>Naive bayes</td>
+            <td>0.3636</td>
+            <td>0.1290</td>
+            <td>0.8</td>
+          </tr>
+          <tr>
+            <td>K-mean</td>
+            <td>0.8181</td>
+            <td>0.0</td>
+            <td>0.0</td>
+          <tr>
+            <td>Logistic regression</td>
+            <td>0.8636</td>
+            <td>0.4</td>
+            <td>0.4</td>
+          </tr>
+          <tr>
+            <td>SVM</td>
+            <td>0.8409</td>
+            <td>0.3333</td>
+            <td>0.4</td>
+          </tr>
+        </table>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+        <p><strong>Question 4: What does it mean to tune the parameters of an algorithm, and what can happen if you don’t do this well?  How did you tune the parameters of your particular algorithm? (Some algorithms do not have parameters that you need to tune -- if this is the case for the one you picked, identify and briefly explain how you would have done it for the model that was not your final choice or a different model that does utilize parameter tuning, e.g. a decision tree classifier).  [relevant rubric item: “tune the algorithm”]</strong></p>
+        <p>Tuning parameters of an algorithm is a process which one goes through in which they optimize the parameters that impact the model in order to enable the algorithm to perform the best. If one does this well, one can optimize his algorithm to its best performance; failure in choosing the right parameters may lead to low prediction power such as low accuracy, low precision ...etc.</p>
+        <p>I built 4 algorithms: 
+        <ul>
+          <li>naive bayes: the model is simple and there's no need to specify any parameter</li>
+          <li>kmeans: n_clusters is set to 2; tol (relative tolerance) is set to 0.0001, and random_state (use to reproduce and confirm the result by fixing the seed) is set to 42</li>
+          <li>logistic regresion: C (inverse regularization) is set to 0.0001; tol (relative tolerance) is set to 0.0001; random_state is set to 42</li>
+          <li>svm: kernel is 'rbf'; C is 100; gamma is 0.001; random_state is 42, and class weight (weights associated with classes) is 'balanced'</li>
+        </ul></p>
 
-<h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+        <p><strong>Question 5:What is validation, and what’s a classic mistake you can make if you do it wrong? How did you validate your analysis?</strong></p>
+        <p>Validation is a model validation technique that assesses how the results of a statistical analysis will generalize to an independent data set. A classic mistakes I often make is overfitting a model; consequently, the overfit model performes well on training data but will typically fail drastically when making predictions about new or unseen data. To avoid this classic mistake, I keep it simple by tuning just a few parameters.</p>
 
-<p>You can @mention a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+        <p><strong>Question 6: Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance. [relevant rubric item: “usage of evaluation metrics”]
+        </strong></p>
+        <p>I used 3 evaluation metrics: accuracy, precision, and recall. You can view the table above to know the average performance for each of them. The best algorithm to apply in this project is logistic regression model. An accuracy of 0.8636 means that the proportion of true results (both true positives and true negatives) is 0.8636 among the total number of cases examined. A precision of 0.4 means that the proportion of true positives is 0.4 among the total number of cases classified as positives, and a recall of 0.4 means that the proportion of true positives is 0.4 among the total number of cases that actually belong to the positive class</p>
+        <footer><a href="https://www.linkedin.com/in/buuthongtran">Contact me</a></footer>
       </section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
-    </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
+    </div>	
   </body>
 </html>
