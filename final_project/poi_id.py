@@ -10,13 +10,17 @@ from tester import dump_classifier_and_data
 from sklearn.feature_selection import SelectKBest
 from sklearn import preprocessing, naive_bayes, svm, linear_model
 from sklearn.cluster import KMeans
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import make_pipeline
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
 # You will need to use more features
-financial_features = ['salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees'] 
-email_features = ['to_messages', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi']
+financial_features = ['salary', 'deferral_payments', 'total_payments', \
+'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', \
+'total_stock_value', 'expenses', 'exercised_stock_options', 'other', \
+'long_term_incentive', 'restricted_stock', 'director_fees'] 
+email_features = ['to_messages', 'from_poi_to_this_person', 'from_messages', \
+'from_this_person_to_poi', 'shared_receipt_with_poi']
 poi_label = ['poi']
 features_list = poi_label + email_features + financial_features
 ### Load the dictionary containing the dataset
@@ -34,7 +38,8 @@ print("Total number of non-poi: %i" % (len(data_dict) - poi))
        
 # Number of features used
 all_features = data_dict[data_dict.keys()[0]].keys()
-print("There are %i features for each person in the dataset, and %i features are used" %(len(all_features), len(features_list)))
+print("There are %i features for each person in the dataset, and %i features \
+are used" %(len(all_features), len(features_list)))
 # Are there features with many missing values? etc.
 missing_values = {}
 for feature in all_features:
@@ -97,6 +102,7 @@ selector.fit(features, labels)
 print("Best features:")
 scores = zip(new_features_list,selector.scores_)
 sorted_scores = sorted(scores, key = lambda x: x[1], reverse=True)
+print sorted_scores
 optimized_features_list = poi_label + list(map(lambda x: x[0], sorted_scores))[0:12]
 print(optimized_features_list)
 
@@ -114,9 +120,10 @@ nb_clf = naive_bayes.GaussianNB()
 
 k_clf = KMeans(n_clusters=2, tol=0.0001,random_state=42)
 
-lo_clf = Pipeline(steps=[
-        ('scaler', preprocessing.StandardScaler()),
-        ('classifier', linear_model.LogisticRegression(tol = 0.0001, C = 10**-4, penalty = 'l2', random_state = 42))])
+lo_clf = make_pipeline(preprocessing.StandardScaler(), \
+                       linear_model.LogisticRegression(tol = 0.0001, \
+                                                       C = 10**-4, penalty = 'l2',\
+                                                       random_state = 42))
 
 s_clf = svm.SVC(kernel='rbf', C=100, gamma = 0.001, random_state = 42, class_weight = 'balanced')
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
@@ -132,7 +139,7 @@ PERF_FORMAT_STRING = "\
 Recall: {:>0.{display_precision}f}\tF1: {:>0.{display_precision}f}\tF2: {:>0.{display_precision}f}"
 RESULTS_FORMAT_STRING = "\tTotal predictions: {:4d}\tTrue positives: {:4d}\tFalse positives: {:4d}\
 \tFalse negatives: {:4d}\tTrue negatives: {:4d}"
-def evaluate_clf(clf, features, labels, t=1000):
+def evaluate_clf(clf, features, labels):
     from sklearn.cross_validation import train_test_split
     features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.3, random_state=42)
