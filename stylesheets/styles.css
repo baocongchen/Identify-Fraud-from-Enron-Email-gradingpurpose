@@ -190,7 +190,9 @@ pre {
 	margin-bottom: 32px;
 }
 
-
+code {
+	background-color: #cdcec8;
+}
 /* Tables */
 
 table {

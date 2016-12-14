@@ -122,65 +122,118 @@
             <td>129</td>
           </tr>
         </table>
-        <p>Looking at the scatter plot, we can see that the enron dataset contains 1 outlier which is TOTAL, so we need to remove it to avoid its impact on our predictive models</p>
+        <p>Looking at the scatter plot, we can see that the enron dataset contains 1 outlier which is "TOTAL", so I removed it to avoid its impact on our prediction models. "THE TRAVEL AGENCY IN THE PARK" was also removed because it is not a person but an agency. After further inspection of NaN, it showed that "LOCKHART EUGENE E" record did not have any value other than NaN, so I decided to remove this record.</p>
 
         <p><strong>Question 2: What features did you end up using in your POI identifier, and what selection process did you use to pick them? Did you have to do any scaling? Why or why not? As part of the assignment, you should attempt to engineer your own feature that does not come ready-made in the dataset -- explain what feature you tried to make, and the rationale behind it. (You do not necessarily have to use it in the final analysis, only engineer and test it.) In your feature selection step, if you used an algorithm like a decision tree, please also give the feature importances of the features that you use, and if you used an automated feature selection function like SelectKBest, please report the feature scores and reasons for your choice of parameter values.  [relevant rubric items: “create new features”, “properly scale features”, “intelligently select feature”]</strong></p>
-        <p>scikit-learn's SelectKBest function returns 12 best features to build predictive models; here is the list of features and their scores:</p>
+        <p>I used <code>VarianceThreshold</code> function to removes all features whose variance is below 80%, then used <code>SelectKBest</code> function to obtain the score of each features; I sorted those scores and used 7 best features as my final features to build prediction models. Here is the list of the final features and their scores:</p>
         <br>
-        <pre> [('expenses', 25.097541528735491), ('deferred_income', 24.467654047526398), ('loan_advances', 21.060001707536571), ('shared_receipt_with_poi', 18.575703268041785), ('director_fees', 16.641707070468989), ('restricted_stock_deferred', 11.595547659730601), ('other', 10.072454529369441), ('long_term_incentive', 9.3467007910514877), ('deferral_payments', 8.8667215371077717), ('from_this_person_to_poi', 8.7464855321290802), ('total_payments', 7.2427303965360181), ('total_stock_value', 6.2342011405067401), ('to_messages', 5.3449415231473374), ('exercised_stock_options', 4.204970858301416), ('msg_to_poi_ratio', 3.2107619169667441), ('from_messages', 2.4265081272428781), ('restricted_stock', 2.1076559432760908), ('poi', 1.6988243485808501), ('salary', 0.2170589303395084), ('from_poi_to_this_person', 0.16416449823428736), ('bonus', 0.06498431172371151)] </pre>
+        <pre> [('exercised_stock_options', 24.815079733218194), ('total_stock_value', 24.182898678566879), ('bonus', 20.792252047181535), ('salary', 18.289684043404513), ('deferred_income', 11.458476579280369), ('long_term_incentive', 9.9221860131898225), ('restricted_stock', 9.2128106219771002)] </pre>
 
-        <p>I made 2 new features named 'msg_from_poi_ratio' and 'msg_to_poi_ratio'; 'msg_from_poi_ratio' shows the ratio a person receives emails from POI, and 'msg_to_poi_ratio' shows the ratio a person sends emails to POI. I intuitively thought that POIs are more likely to contact each other than non-POIs; therefore the two new features I engineered would be better predictors of POI; however, the scores I got from SelectKBest function show me the opposite. After choosing 12 best features to build predictive models, I use min-max scalers to linearly rescale each feature to a common range.</p>
+        <p>I made 2 new features named <code>'msg_from_poi_ratio'</code> and <code>'msg_to_poi_ratio'</code>; <code>'msg_from_poi_ratio'</code> shows the ratio a person receives emails from POI, and <code>'msg_to_poi_ratio'</code> shows the ratio a person sends emails to POI. I intuitively thought that POIs are more likely to contact each other than non-POIs; therefore the two new features I engineered would be better predictors of POI; however, the scores I got from SelectKBest function showed me the opposite. So I tried to see how well my best model performs, naive bayse model in this case, with and without the new features. As I speculated, the performance slightly dropped after I had added the two new features to my features list. The following table displays the drop in performance when I used the two engineered features</p>
+        <table>
+          <colgroup span="3"></colgroup>
+          <tr>
+            <th>Metric</th>
+            <th>Without engineered features</th>
+            <th>With engineered features</th>
+          </tr>
+          <tr>
+            <td>Accuracy</td>
+            <td>0.855</td>
+            <td>0.843</td>
+          </tr>
+          <tr>
+            <td>Precision</td>
+            <td>0.433</td>
+            <td>0.373</td>
+          </tr>
+          <tr>
+            <td>Recall</td>
+            <td>0.373</td>
+            <td>0.374</td>
+          </tr>
+        </table>
+        <p>There are 20 features in the dataset, but not all features are to be used. I chose k = 7 to obtain 7 highest scoring features. Since the range of values of raw data varies widely, in some machine learning algorithms such as K-means, SVM and logistic regression, objective functions will not work properly without normalization. Therefore, after choosing 7 best features to build prediction models, I used min-max scalers to linearly rescale each feature to a common range.</p>
 
         <p><strong>Question 3: What algorithm did you end up using? What other one(s) did you try? How did model performance differ between algorithms?  [relevant rubric item: “pick an algorithm”]</strong></p>
-        <p>I tried 4 algorithm: naive bayes, k-mean, logistic regression and svm. Logistic regression gives me the best accuracy, precision performance; svm comes second, then naive bayes and kmeans. An ideal system with high precision and high recall will return many results, with all results labeled correctly, and this is the standard I apply for choosing the best algorithm. Based on the result, logistic regression comes out to be the best model to predict POI in this project.</p>
-        <table style="width:100%">
+        <p>An ideal system with high precision and high recall will return many results, with all results labeled correctly, and this is the standard I apply for choosing the best algorithm. I tried 4 algorithms: naive bayes, k-mean, logistic regression and svm. Naive bayes turned out to be best algorithm; it performed well in both the test set and the final set while the K-means model only performed well in the test set and failed drastically in the final set</p>
+        <table>
           <tr>
             <th>Feature</th>
             <th>Accuracy</th>
             <th>Precision</th>
             <th>Recall</th>
+            <th>Best Param</th>
           </tr>
           <tr>
             <td>Naive bayes</td>
-            <td>0.3636</td>
-            <td>0.1290</td>
-            <td>0.8</td>
+            <td>0.855</td>
+            <td>0.433</td>
+            <td>0.373</td>
+            <td></td>
           </tr>
           <tr>
-            <td>K-mean</td>
-            <td>0.8181</td>
-            <td>0.0</td>
-            <td>0.0</td>
+            <td>K-means</td>
+            <td>0.369</td>
+            <td>0.760</td>
+            <td>0.374</td>
+            <td>tol=1, n_clusters=5</td>
           <tr>
             <td>Logistic regression</td>
-            <td>0.8636</td>
-            <td>0.4</td>
-            <td>0.4</td>
+            <td>0.860</td>
+            <td>0.400</td>
+            <td>0.190</td>
+            <td>tol=1, C=0.1</td>
           </tr>
           <tr>
             <td>SVM</td>
-            <td>0.8409</td>
-            <td>0.3333</td>
-            <td>0.4</td>
+            <td>0.866</td>
+            <td>0.142</td>
+            <td>0.038</td>
+            <td>kernel='linear', C=1, gamma=1</td>
           </tr>
         </table>
 
         <p><strong>Question 4: What does it mean to tune the parameters of an algorithm, and what can happen if you don’t do this well?  How did you tune the parameters of your particular algorithm? (Some algorithms do not have parameters that you need to tune -- if this is the case for the one you picked, identify and briefly explain how you would have done it for the model that was not your final choice or a different model that does utilize parameter tuning, e.g. a decision tree classifier).  [relevant rubric item: “tune the algorithm”]</strong></p>
         <p>Tuning parameters of an algorithm is a process which one goes through in which they optimize the parameters that impact the model in order to enable the algorithm to perform the best. If one does this well, one can optimize his algorithm to its best performance; failure in choosing the right parameters may lead to low prediction power such as low accuracy, low precision ...etc.</p>
-        <p>I built 4 algorithms: 
+        <p>I built 4 algorithms, and used GridSearchCV function to get the best parameters for each of them: 
         <ul>
           <li>naive bayes: the model is simple and there's no need to specify any parameter</li>
-          <li>kmeans: n_clusters is set to 2; tol (relative tolerance) is set to 0.0001, and random_state (use to reproduce and confirm the result by fixing the seed) is set to 42</li>
-          <li>logistic regresion: C (inverse regularization) is set to 0.0001; tol (relative tolerance) is set to 0.0001; random_state is set to 42</li>
-          <li>svm: kernel is 'rbf'; C is 100; gamma is 0.001; random_state is 42, and class weight (weights associated with classes) is 'balanced'</li>
+          <li>kmeans: n_clusters is set to 5; tol (relative tolerance) is set to 1, and random_state (use to reproduce and confirm the result by fixing the seed) is set to 42</li>
+          <li>logistic regresion: C (inverse regularization) is set to 0.1; tol (relative tolerance) is set to 1; random_state is set to 42</li>
+          <li>svm: kernel is 'linear'; C is 1; gamma is 1; random_state is 42</li>
         </ul></p>
 
         <p><strong>Question 5:What is validation, and what’s a classic mistake you can make if you do it wrong? How did you validate your analysis?</strong></p>
-        <p>Validation is a model validation technique that assesses how the results of a statistical analysis will generalize to an independent data set. A classic mistakes I often make is overfitting a model; consequently, the overfit model performes well on training data but will typically fail drastically when making predictions about new or unseen data. To avoid this classic mistake, I keep it simple by tuning just a few parameters.</p>
+        <p>Validation is a model validation technique that assesses how the results of a statistical analysis will generalize to an independent data set. A classic mistakes I often make is overfitting a model; consequently, the overfit model performes well on training data but will typically fail drastically when making predictions about new or unseen data. To avoid this classic mistake, I tried to keep it simple by tuning just a few parameters, and built function called <code>evaluate_clf</code> in which I applied cross validation technique to split the data into training data and test data 100 times, calculate the accuracy, precision, and recall of each iteration; then I took the mean of each metric.</p>
 
         <p><strong>Question 6: Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance. [relevant rubric item: “usage of evaluation metrics”]
         </strong></p>
-        <p>I used 3 evaluation metrics: accuracy, precision, and recall. You can view the table above to know the average performance for each of them. The best algorithm to apply in this project is logistic regression model. An accuracy of 0.8636 means that the proportion of true results (both true positives and true negatives) is 0.8636 among the total number of cases examined. A precision of 0.4 means that the proportion of true positives is 0.4 among the total number of cases classified as positives, and a recall of 0.4 means that the proportion of true positives is 0.4 among the total number of cases that actually belong to the positive class</p>
+        <p>I used 3 evaluation metrics: accuracy, precision, and recall. The average performance for each of them are shown in the table above. The best algorithm to apply in this project is naive bayes. 
+        <table>
+          <colgroup span="3"></colgroup>
+          <tr>
+            <th>Metric</th>
+            <th>Performance on test set</th>
+            <th>Performance on final set</th>
+          </tr>
+          <tr>
+            <td>Accuracy</td>
+            <td>0.855</td>
+            <td>0.847</td>
+          </tr>
+          <tr>
+            <td>Precision</td>
+            <td>0.433</td>
+            <td>0.457</td>
+          </tr>
+          <tr>
+            <td>Recall</td>
+            <td>0.373</td>
+            <td>0.384</td>
+          </tr>
+        </table>
+        Accuracy demonstrates how close a measured value is to the actual (true) value. An accuracy of 0.855 means that the proportion of true results (both true positives and true negatives) is 0.855 among the total number of cases examined. Precision is a metric that measures an algorithm's power to classify true positives from all cases that are classified as positives. A precision of 0.433 means that among the total 100 persons classified as POIs, 43 persons are actually POIs. Recall is a metric that measures an algorithm's power to classify true positives over all cases that are actually positives. A recall of 0.373 means that among 100 true POIs existing in the dataset, 37 POIs are correctly classified as POIs</p>
         <footer><a href="https://www.linkedin.com/in/buuthongtran">Contact me</a></footer>
       </section>
     </div>	
